@@ -62,14 +62,14 @@ export const actions = {
 export const settingsSlice = createSlice({
   name: 'settings',
   initialState: settingAdapter.getInitialState({
-    baseUrl: 'app.chatwoot.com',
-    installationUrl: 'https://app.chatwoot.com/',
+    baseUrl: 'chat.onehash.ai',
+    installationUrl: 'https://chat.onehash.ai/',
     isLocaleSet: false,
     isSettingUrl: false,
     isUpdating: false,
     localeValue: 'en',
     notification: {},
-    webSocketUrl: 'wss://app.chatwoot.com/cable',
+    webSocketUrl: 'wss://chat.onehash.ai/cable',
   }),
   reducers: {
     resetSettings: state => {
