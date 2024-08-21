@@ -1,4 +1,4 @@
-package com.chatwoot.app;
+package com.onehashchat.app;
 
 import android.os.Bundle;
 
