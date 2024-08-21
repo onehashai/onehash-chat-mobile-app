@@ -84,3 +84,5 @@ ios/sentry.properties
 android/sentry.properties
 
 GoogleService-Info.plist
+
+private.js

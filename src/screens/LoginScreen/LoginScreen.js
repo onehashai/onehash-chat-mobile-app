@@ -11,7 +11,6 @@ import AnalyticsHelper from 'helpers/AnalyticsHelper';
 import { ACCOUNT_EVENTS } from 'constants/analyticsEvents';
 import { Text } from 'components';
 
-import DeviceInfo from 'react-native-device-info';
 import createStyles from './LoginScreen.style';
 import TextInput from '../../components/TextInput';
 import images from '../../constants/images';
@@ -20,7 +19,7 @@ import i18n from '../../i18n';
 import LoaderButton from '../../components/LoaderButton';
 import { ScrollView } from 'react-native-gesture-handler';
 
-import { SIGNUP_URL } from '../../constants/url';
+import { RESET_PASS_URL, SIGNUP_URL } from '../../constants/url';
 import { openURL } from '../../helpers/UrlHelper';
 import { EMAIL_REGEX } from '../../helpers/formHelper';
 import { actions as authActions, resetAuth, selectLoggedIn } from 'reducer/authSlice';
@@ -34,8 +33,6 @@ import {
 
 const deviceHeight = Dimensions.get('window').height;
 
-const appName = DeviceInfo.getApplicationName();
-
 const propTypes = {
   onLogin: PropTypes.func,
   isLoggingIn: PropTypes.bool,
@@ -48,7 +45,7 @@ const propTypes = {
 };
 
 const defaultProps = {
-  onLogin: () => {},
+  onLogin: () => { },
   isLoggingIn: false,
 };
 
@@ -73,10 +70,16 @@ const LoginScreenComponent = ({ navigation }) => {
   }, [installationUrl, navigation, dispatch]);
 
   const doSignup = () => {
-    openURL({ URL: `${installationUrl}${SIGNUP_URL}` });
+    openURL({
+      URL: SIGNUP_URL,
+    });
   };
 
-  const { navigate } = navigation;
+  const doChangePassword = () => {
+    openURL({
+      URL: RESET_PASS_URL,
+    });
+  };
 
   const {
     control,
@@ -189,7 +192,7 @@ const LoginScreenComponent = ({ navigation }) => {
                 name="password"
               />
             </View>
-            <TouchableOpacity style={styles.forgotView} onPress={() => navigate('ResetPassword')}>
+            <TouchableOpacity style={styles.forgotView} onPress={doChangePassword}>
               <Text xs medium color={colors.textLight}>
                 {i18n.t('LOGIN.FORGOT_PASSWORD')}
               </Text>
@@ -208,22 +211,22 @@ const LoginScreenComponent = ({ navigation }) => {
 
           <View style={styles.linksContainer}>
             <View style={styles.accountView}>
-              {appName === 'Chatwoot' && (
+              {
                 <>
                   <TouchableOpacity onPress={doSignup}>
                     <Text xs medium color={colors.textLight}>
                       {i18n.t('LOGIN.CREATE_ACCOUNT')}
                     </Text>
                   </TouchableOpacity>
-                  <Text color={colors.textLight}>{'   |   '}</Text>
+                  {/* <Text color={colors.textLight}>{'   |   '}</Text> */}
                 </>
-              )}
+              }
 
-              <TouchableOpacity onPress={() => navigate('ConfigureURL')}>
+              {/* <TouchableOpacity onPress={() => navigate('ConfigureURL')}>
                 <Text xs medium color={colors.textLight}>
                   {i18n.t('LOGIN.CHANGE_URL')}
                 </Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
             <View style={styles.accountView}>
               <TouchableOpacity onPress={toggleChangeLanguageModal}>

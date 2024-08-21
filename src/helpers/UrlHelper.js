@@ -9,12 +9,14 @@ export const getBaseUrl = async () => {
     const state = await store.getState();
     const { installationUrl } = state.settings;
     return installationUrl;
-  } catch (error) {}
+  } catch (error) { }
 };
 
 export const getConversationUrl = async ({ conversationId, accountId }) => {
   try {
+
     const baseURL = await getBaseUrl();
+
     const conversationURL = `${baseURL}app/accounts/${accountId}/conversations/${conversationId}`;
     return conversationURL;
   } catch (error) {

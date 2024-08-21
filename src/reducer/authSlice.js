@@ -7,16 +7,46 @@ import { showToast } from 'helpers/ToastHelper';
 import { getHeaders } from 'helpers/AuthHelper';
 import { getBaseUrl } from 'helpers/UrlHelper';
 import { API_URL } from 'constants/url';
+
 import { updateAgentsPresence } from 'reducer/inboxAgentsSlice';
+import { KEYCLOAK_CLIENT_ID, KEYCLOAK_CLIENT_SECRET } from 'src/constants/private';
 
 export const actions = {
   doLogin: createAsyncThunk('auth/doLogin', async ({ email, password }, { rejectWithValue }) => {
     try {
-      const response = await APIHelper.post('auth/sign_in', { email, password });
-      const { data } = response.data;
+      const tokenReqBodyData = new URLSearchParams({
+        username: email,
+        password: password,
+        client_id: KEYCLOAK_CLIENT_ID,
+        client_secret: KEYCLOAK_CLIENT_SECRET,
+        grant_type: 'password',
+        scope: 'openid',
+      });
+
+      const tokenRes = await axios.post(
+        'https://sso.onehash.ai/realms/OneHash/protocol/openid-connect/token',
+        tokenReqBodyData.toString(),
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        },
+      );
+      const response = await APIHelper.post(
+        'mobile_auth',
+        { email },
+        {
+          headers: {
+            Authorization: `Bearer ${tokenRes.data.access_token}`,
+          },
+        },
+      );
+      const { data } = response;
       const { 'access-token': access_token, uid, client } = response.headers;
-      const { name, id, account_id, accounts, pubsub_token, avatar_url, available_name, role } =
-        data;
+      const {
+        user: { name, id, account_id, accounts, pubsub_token, avatar_url, available_name, role },
+      } = data;
+
       return {
         user: {
           name,
@@ -29,6 +59,7 @@ export const actions = {
           available_name,
           role,
         },
+
         headers: {
           'access-token': access_token,
           uid,
@@ -37,7 +68,6 @@ export const actions = {
       };
     } catch (error) {
       const { response } = error;
-
       if (response && response.status === 401) {
         const { errors } = response.data;
         const hasAuthErrorMsg =
@@ -47,15 +77,13 @@ export const actions = {
         } else {
           showToast({ message: I18n.t('ERRORS.AUTH') });
         }
-        if (!errors) {
-          throw errors;
-        }
-        return rejectWithValue(errors);
+        return rejectWithValue(errors || I18n.t('ERRORS.AUTH'));
       }
       showToast({ message: I18n.t('ERRORS.COMMON_ERROR') });
       return rejectWithValue(error);
     }
   }),
+
   onResetPassword: createAsyncThunk(
     'auth/onResetPassword',
     async ({ email }, { rejectWithValue }) => {
@@ -108,7 +136,7 @@ export const actions = {
           }),
         );
         return data;
-      } catch (error) {}
+      } catch (error) { }
     },
   ),
 };
@@ -195,7 +223,7 @@ export const selectUser = state => state.auth.currentUser;
 
 export const selectUserId = state => state.auth.currentUser.id;
 
-export const selectLoggedIn = state => state.auth.currentUser?.id;
+export const selectLoggedIn = state => state.auth.currentUser.id;
 
 export const selectIsLoggingIn = state => state.auth.isLoggingIn;
 

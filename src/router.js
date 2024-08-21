@@ -36,7 +36,7 @@ const defaultProps = {
   isLoggedIn: false,
 };
 // TODO
-messaging().setBackgroundMessageHandler(async remoteMessage => {});
+messaging().setBackgroundMessageHandler(async remoteMessage => { });
 
 const App = () => {
   // TODO: Lets use light theme for now, add dark theme later
