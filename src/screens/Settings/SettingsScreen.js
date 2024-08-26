@@ -16,7 +16,7 @@ import { LANGUAGES } from 'constants';
 import i18n from 'i18n';
 import images from 'constants/images';
 import createStyles from './SettingsScreen.style';
-import { HELP_URL } from 'constants/url.js';
+import { CONTACT_URL, HELP_URL } from 'constants/url.js';
 import { openURL } from 'helpers/UrlHelper';
 import packageFile from '../../../package.json';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -284,8 +284,10 @@ const SettingsScreen = () => {
                     openURL({ URL: HELP_URL });
                   }
                   if (item.routeName === 'ChatWithUs') {
-                    AnalyticsHelper.track(ACCOUNT_EVENTS.OPEN_SUPPORT);
-                    toggleWidget(true);
+                    openURL({ URL: CONTACT_URL });
+
+                    // AnalyticsHelper.track(ACCOUNT_EVENTS.OPEN_SUPPORT);
+                    // toggleWidget(true);
                   }
                 }}
               />
