@@ -79,8 +79,8 @@ android {
         applicationId "com.onehashchat.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 5180020
-        versionName "1.10.28"
+        versionCode 5180021
+        versionName "1.10.29"
     }
     lintOptions {
         checkReleaseBuilds false
